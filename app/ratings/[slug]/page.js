@@ -1,30 +1,43 @@
 import { supabase } from '../../../lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
- 
-export default async function RatingPage({ params }) {
+
+function ScoreRing({ score, label }) {
+  const color = score >= 75 ? '#1D9E75' : score >= 60 ? '#FFC72C' : '#E24B4A'
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: '80px', height: '80px', borderRadius: '50%',
+        border: '3px solid ' + color,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto 8px',
+      }}>
+        <span style={{ fontSize: '22px', fontWeight: 800, color: color }}>{score}</span>
+      </div>
+      <div style={{ fontSize: '11px', color: '#555550', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        {label}
+      </div>
+    </div>
+  )
+}
+
+export default async function TeamPage({ params }) {
   const { slug } = await params
- 
-  const { data: rating, error } = await supabase
-    .from('ratings')
+
+  const { data: team, error } = await supabase
+    .from('teams')
     .select('*')
     .eq('slug', slug)
     .single()
- 
-  if (error || !rating) return notFound()
- 
-  const verdictMap = {
-    pay: { label: 'Pay Him', color: rating.accent_color || '#1D9E75' },
-    fair: { label: 'Fair Deal', color: rating.accent_color || '#1D9E75' },
-    over: { label: 'Overpaid', color: '#E24B4A' },
-    dead: { label: 'Dead Money', color: '#E24B4A' },
-  }
-  const verdict = verdictMap[rating.verdict] || verdictMap.fair
-  const accentColor = rating.verdict === 'over' || rating.verdict === 'dead' ? '#E24B4A' : (rating.accent_color || '#1D9E75')
- 
+
+  if (error || !team) return notFound()
+
+  const scoreColor = team.score_overall >= 75 ? '#1D9E75' : team.score_overall >= 60 ? '#FFC72C' : '#E24B4A'
+  const accentColor = team.accent_color || '#0F6E56'
+
   return (
     <div>
-      {/* Hero */}
+      {/* Header */}
       <section style={{
         padding: '64px 40px 48px',
         borderBottom: '1px solid #2a2a2a',
@@ -35,116 +48,81 @@ export default async function RatingPage({ params }) {
           width: '4px', height: '100%',
           background: accentColor,
         }} />
-        <Link href="/" style={{
+        <Link href="/teams" style={{
           fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em',
           textTransform: 'uppercase', color: '#555550',
           display: 'inline-block', marginBottom: '32px',
           textDecoration: 'none',
         }}>
-          Back to All Ratings
+          Back to All Teams
         </Link>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px',
+          fontSize: '12px', fontWeight: 600, letterSpacing: '0.12em',
+          textTransform: 'uppercase', color: '#555550', marginBottom: '12px',
         }}>
-          <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#555550' }}>
-            {rating.league} · {rating.team_name}
-          </span>
-          <span style={{
-            background: accentColor + '22', color: accentColor,
-            padding: '3px 10px', fontSize: '12px',
-            fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-          }}>
-            {verdict.label}
-          </span>
+          {team.league} · Contract Analysis
         </div>
+        <h1 style={{
+          fontSize: 'clamp(48px, 7vw, 96px)',
+          fontWeight: 900, lineHeight: 0.92,
+          textTransform: 'uppercase', letterSpacing: '-0.02em',
+          marginBottom: '32px', color: '#F5F2EC',
+        }}>
+          {team.name}
+        </h1>
+
+        {/* Scores */}
         <div style={{
-          fontSize: 'clamp(64px, 10vw, 130px)',
-          fontWeight: 900, lineHeight: 0.9,
-          color: '#F5F2EC', letterSpacing: '-0.02em',
-          marginBottom: '16px',
+          display: 'flex', gap: '48px', flexWrap: 'wrap',
+          alignItems: 'center',
         }}>
-          {rating.contract_value}
-        </div>
-        <div style={{ fontSize: '20px', color: '#9a9894', marginBottom: '8px', fontWeight: 500 }}>
-          {rating.player_name} — {rating.contract_detail}
-        </div>
-        <div style={{ fontSize: '13px', color: '#555550' }}>
-          Contract Year · @contractyearhq · Show your work.
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '120px', height: '120px', borderRadius: '50%',
+              border: '4px solid ' + scoreColor,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 8px',
+            }}>
+              <span style={{ fontSize: '42px', fontWeight: 900, color: scoreColor }}>
+                {team.score_overall}
+              </span>
+            </div>
+            <div style={{ fontSize: '11px', color: '#555550', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Overall Score
+            </div>
+          </div>
+          <div style={{ width: '1px', height: '80px', background: '#2a2a2a' }} />
+          <ScoreRing score={team.score_value} label="Value" />
+          <ScoreRing score={team.score_risk} label="Risk" />
+          <ScoreRing score={team.score_flexibility} label="Flexibility" />
+          <div style={{ marginLeft: 'auto' }}>
+            <div style={{ fontSize: '11px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>Total Payroll</div>
+            <div style={{ fontSize: '36px', fontWeight: 900, color: '#F5F2EC' }}>
+              {'$' + (team.total_payroll / 1000000).toFixed(0) + 'M'}
+            </div>
+          </div>
         </div>
       </section>
- 
+
       {/* Summary */}
       <section style={{
         padding: '48px 40px',
         borderBottom: '1px solid #2a2a2a',
         maxWidth: '720px',
       }}>
+        <div style={{
+          fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
+          textTransform: 'uppercase', color: '#555550', marginBottom: '16px',
+        }}>
+          Contract Year Analysis
+        </div>
         <p style={{ fontSize: '18px', color: '#9a9894', lineHeight: 1.75 }}>
-          {rating.summary}
+          {team.summary_text}
         </p>
       </section>
- 
-      {/* Bull Case */}
-      <section style={{
-        padding: '48px 40px',
-        borderBottom: '1px solid #2a2a2a',
-        maxWidth: '720px',
-      }}>
-        <div style={{
-          fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: accentColor, marginBottom: '16px',
-        }}>
-          The Bull Case
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75 }}>
-          {rating.bull_case}
-        </p>
-      </section>
- 
-      {/* Bear Case */}
-      <section style={{
-        padding: '48px 40px',
-        borderBottom: '1px solid #2a2a2a',
-        maxWidth: '720px',
-      }}>
-        <div style={{
-          fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: '#E24B4A', marginBottom: '16px',
-        }}>
-          The Bear Case
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75 }}>
-          {rating.bear_case}
-        </p>
-      </section>
- 
-      {/* Show Your Work */}
-      <section style={{
-        padding: '48px 40px',
-        borderBottom: '1px solid #2a2a2a',
-        background: '#161616',
-      }}>
-        <div style={{
-          fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: accentColor, marginBottom: '16px',
-        }}>
-          Show Your Work.
-        </div>
-        <div style={{
-          fontSize: 'clamp(48px, 8vw, 96px)',
-          fontWeight: 900, lineHeight: 1,
-          color: '#F5F2EC', marginBottom: '16px',
-          letterSpacing: '-0.02em',
-        }}>
-          {rating.show_your_work_number}
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75, maxWidth: '620px' }}>
-          {rating.show_your_work_desc}
-        </p>
-      </section>
- 
+
       {/* Full Analysis */}
-      {rating.full_analysis && (
+      {team.full_analysis && (
         <section style={{
           padding: '48px 40px',
           borderBottom: '1px solid #2a2a2a',
@@ -152,66 +130,78 @@ export default async function RatingPage({ params }) {
         }}>
           <div style={{
             fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-            textTransform: 'uppercase', color: '#555550', marginBottom: '16px',
+            textTransform: 'uppercase', color: accentColor, marginBottom: '16px',
           }}>
-            Full Analysis
+            The Full Picture
           </div>
           <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75 }}>
-            {rating.full_analysis}
+            {team.full_analysis}
           </p>
         </section>
       )}
- 
-      {/* Verdict */}
-      <section style={{
-        padding: '48px 40px',
-        borderBottom: '1px solid #2a2a2a',
-      }}>
-        <div style={{
-          fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: '#555550', marginBottom: '16px',
+
+      {/* Best + Worst Contract */}
+      {(team.best_contract_player || team.worst_contract_player) && (
+        <section style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          borderBottom: '1px solid #2a2a2a',
+          gap: '1px', background: '#2a2a2a',
         }}>
-          Contract Year Verdict
+          {team.best_contract_player && (
+            <div style={{ background: '#111', padding: '40px' }}>
+              <div style={{
+                fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
+                textTransform: 'uppercase', color: '#1D9E75', marginBottom: '12px',
+              }}>
+                Best Contract
+              </div>
+              <div style={{ fontSize: '22px', fontWeight: 800, color: '#F5F2EC', marginBottom: '12px' }}>
+                {team.best_contract_player}
+              </div>
+              <p style={{ fontSize: '15px', color: '#9a9894', lineHeight: 1.65 }}>
+                {team.best_contract}
+              </p>
+            </div>
+          )}
+          {team.worst_contract_player && (
+            <div style={{ background: '#111', padding: '40px' }}>
+              <div style={{
+                fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
+                textTransform: 'uppercase', color: '#E24B4A', marginBottom: '12px',
+              }}>
+                Biggest Risk
+              </div>
+              <div style={{ fontSize: '22px', fontWeight: 800, color: '#F5F2EC', marginBottom: '12px' }}>
+                {team.worst_contract_player}
+              </div>
+              <p style={{ fontSize: '15px', color: '#9a9894', lineHeight: 1.65 }}>
+                {team.worst_contract}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Engage */}
+      <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a' }}>
+        <div style={{ fontSize: '14px', color: '#555550', marginBottom: '16px' }}>
+          Agree with the breakdown? Drop your verdict on Instagram.
         </div>
-        <div style={{
-          background: '#1a1a1a', border: '1px solid #2a2a2a',
-          padding: '32px', marginBottom: '24px',
-          display: 'inline-block',
-        }}>
-          <div style={{
-            fontSize: 'clamp(48px, 6vw, 80px)',
-            fontWeight: 900, textTransform: 'uppercase',
-            color: accentColor, lineHeight: 1,
-          }}>
-            {verdict.label}
-          </div>
-        </div>
-        <div style={{
-          borderTop: '1px solid #2a2a2a',
-          paddingTop: '24px', marginTop: '8px',
-        }}>
-          <div style={{ fontSize: '14px', color: '#555550', marginBottom: '8px' }}>
-            Agree? Drop your rating on Instagram.
-          </div>
-          <div style={{ fontSize: '14px', color: '#555550', marginBottom: '16px', letterSpacing: '0.04em' }}>
-            PAY HIM · FAIR DEAL · OVERPAID · DEAD MONEY
-          </div>
-          <a
-            href="https://instagram.com/contractyearhq"
-            target="_blank"
-            style={{
-              display: 'inline-block',
-              background: '#0F6E56', color: 'white',
-              padding: '12px 24px', fontSize: '13px',
-              fontWeight: 700, letterSpacing: '0.08em',
-              textTransform: 'uppercase', textDecoration: 'none',
-            }}
-          >
-            @contractyearhq
-          </a>
-        </div>
+        <a
+          href="https://instagram.com/contractyearhq"
+          target="_blank"
+          style={{
+            display: 'inline-block',
+            background: '#0F6E56', color: 'white',
+            padding: '12px 24px', fontSize: '13px',
+            fontWeight: 700, letterSpacing: '0.08em',
+            textTransform: 'uppercase', textDecoration: 'none',
+          }}
+        >
+          @contractyearhq
+        </a>
       </section>
- 
+
       <footer style={{
         borderTop: '1px solid #2a2a2a',
         padding: '40px',
@@ -231,4 +221,3 @@ export default async function RatingPage({ params }) {
     </div>
   )
 }
- 
