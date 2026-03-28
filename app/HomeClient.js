@@ -43,105 +43,56 @@ function RatingsCycler({ ratings }) {
     <div style={{
       border: '1px solid #2a2a2a',
       background: '#161616',
-      width: "440px", minWidth: "440px",
+      width: '440px',
+      minWidth: '440px',
       flexShrink: 0,
       position: 'relative',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
     }}>
-      {/* Green flowing top stripe */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: '4px',
         background: 'linear-gradient(90deg, #0F6E56, #1D9E75, #9FE1CB, #1D9E75, #0F6E56)',
         backgroundSize: '300% 100%',
         animation: 'greenFlow 3s linear infinite',
       }} />
-
-      {/* Top bar */}
-      <div style={{
-        background: '#1a1a1a',
-        borderBottom: '1px solid #2a2a2a',
-        padding: '12px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginTop: '4px',
-      }}>
-        <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#1D9E75' }}>
-          Contract Year Rating
-        </span>
+      <div style={{ background: '#1a1a1a', borderBottom: '1px solid #2a2a2a', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
+        <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#1D9E75' }}>Contract Year Rating</span>
         <span style={{ fontSize: '11px', color: '#555550' }}>{current.league}</span>
       </div>
-
-      {/* Main content */}
       <div style={{
-        padding: '28px 24px',
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0px)' : 'translateY(10px)',
+        padding: '28px 24px', flex: 1, display: 'flex', flexDirection: 'column',
+        opacity: visible ? 1 : 0, transform: visible ? 'translateY(0px)' : 'translateY(10px)',
         transition: 'opacity 0.7s ease, transform 0.7s ease',
       }}>
-        {/* Value + stamp row */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '16px' }}>
           <div style={{ fontSize: '48px', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.02em', color: '#F5F2EC' }}>
             {current.contract_value}
           </div>
-          <div style={{
-            border: '3px solid ' + v.color,
-            padding: '8px 12px',
-            transform: 'rotate(-3deg)',
-            position: 'relative',
-            background: v.color + '08',
-            boxShadow: '0 0 12px ' + v.color + '22',
-            flexShrink: 0,
-            marginTop: '4px',
-          }}>
+          <div style={{ border: '3px solid ' + v.color, padding: '8px 12px', transform: 'rotate(-3deg)', position: 'relative', background: v.color + '08', boxShadow: '0 0 12px ' + v.color + '22', flexShrink: 0, marginTop: '4px' }}>
             <div style={{ position: 'absolute', top: '3px', left: '3px', width: '7px', height: '7px', borderTop: '2px solid ' + v.color, borderLeft: '2px solid ' + v.color }} />
             <div style={{ position: 'absolute', top: '3px', right: '3px', width: '7px', height: '7px', borderTop: '2px solid ' + v.color, borderRight: '2px solid ' + v.color }} />
             <div style={{ position: 'absolute', bottom: '3px', left: '3px', width: '7px', height: '7px', borderBottom: '2px solid ' + v.color, borderLeft: '2px solid ' + v.color }} />
             <div style={{ position: 'absolute', bottom: '3px', right: '3px', width: '7px', height: '7px', borderBottom: '2px solid ' + v.color, borderRight: '2px solid ' + v.color }} />
-            <div style={{ fontSize: "13px", fontWeight: 900, textTransform: "uppercase", color: v.color, lineHeight: 1, letterSpacing: "0.02em", whiteSpace: "nowrap", opacity: 0.92 }}>
+            <div style={{ fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', color: v.color, lineHeight: 1, letterSpacing: '0.02em', whiteSpace: 'nowrap', opacity: 0.92 }}>
               {v.label}
             </div>
           </div>
         </div>
-
-        {/* Player name */}
-        <div style={{ fontSize: '18px', fontWeight: 700, color: '#1D9E75', marginBottom: '4px', letterSpacing: '-0.01em' }}>
-          {current.player_name}
-        </div>
-
-        {/* Team */}
-        <div style={{ fontSize: '11px', color: '#555550', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>
-          {current.team_name} · {current.contract_detail}
-        </div>
-
-        {/* Divider */}
+        <div style={{ fontSize: '18px', fontWeight: 700, color: '#1D9E75', marginBottom: '4px', letterSpacing: '-0.01em' }}>{current.player_name}</div>
+        <div style={{ fontSize: '11px', color: '#555550', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>{current.team_name} · {current.contract_detail}</div>
         <div style={{ height: '1px', background: '#2a2a2a', marginBottom: '16px' }} />
-
-        {/* Summary */}
-        <div style={{ fontSize: '13px', color: '#9a9894', lineHeight: 1.65, flex: 1 }}>
-          {current.summary}
-        </div>
-
-        {/* Read link */}
+        <div style={{ fontSize: '13px', color: '#9a9894', lineHeight: 1.65, flex: 1 }}>{current.summary}</div>
         <div style={{ marginTop: '20px' }}>
           <Link href={'/ratings/' + current.slug} style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#1D9E75', textDecoration: 'none' }}>
             Read the breakdown →
           </Link>
         </div>
       </div>
-
-      {/* Progress dots */}
-      <div style={{ padding: '0 24px 20px', display: 'flex', gap: '6px', alignItems: 'center', borderTop: '1px solid #2a2a2a', paddingTop: '16px' }}>
+      <div style={{ padding: '16px 24px 20px', display: 'flex', gap: '6px', alignItems: 'center', borderTop: '1px solid #2a2a2a' }}>
         {ratings.map((_, i) => (
-          <div key={i} style={{
-            width: i === index ? '24px' : '6px',
-            height: '4px', borderRadius: '2px',
-            background: i === index ? '#1D9E75' : '#2a2a2a',
-            transition: 'all 0.5s ease',
-          }} />
+          <div key={i} style={{ width: i === index ? '24px' : '6px', height: '4px', borderRadius: '2px', background: i === index ? '#1D9E75' : '#2a2a2a', transition: 'all 0.5s ease' }} />
         ))}
         <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#333', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           {index + 1} / {ratings.length}
@@ -153,7 +104,11 @@ function RatingsCycler({ ratings }) {
 
 export default function HomeClient({ ratings }) {
   const featured = ratings.find(r => r.featured)
-  const rest = ratings.filter(r => !r.featured)
+  const nonFeatured = ratings.filter(r => !r.featured)
+
+  const recentNFL = nonFeatured.filter(r => r.league === 'NFL').slice(0, 2)
+  const recentNBA = nonFeatured.filter(r => r.league === 'NBA').slice(0, 2)
+  const homeGrid = [...recentNFL, ...recentNBA]
 
   return (
     <div>
@@ -165,7 +120,7 @@ export default function HomeClient({ ratings }) {
       `}</style>
 
       {/* Hero */}
-      <section style={{ padding: '100px 40px 80px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'stretch', justifyContent: "space-between", gap: "32px", flexWrap: 'wrap' }}>
+      <section style={{ padding: '100px 40px 80px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', gap: '40px', flexWrap: 'wrap' }}>
         <div style={{ flex: 1, minWidth: '280px' }}>
           <div style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#1D9E75', marginBottom: '20px' }}>
             NFL + NBA · Contract Analysis
@@ -205,14 +160,13 @@ export default function HomeClient({ ratings }) {
             </div>
           </div>
         </div>
-
         <RatingsCycler ratings={ratings} />
       </section>
 
       {/* Latest Ratings Header */}
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: '48px 40px 24px', borderBottom: '1px solid #2a2a2a' }}>
         <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555550' }}>Latest Ratings</span>
-        <span style={{ fontSize: '13px', color: '#555550' }}>{ratings.length} contracts rated</span>
+        <Link href="/ratings" style={{ fontSize: '13px', color: '#1D9E75', textDecoration: 'none', fontWeight: 600 }}>View all {ratings.length} →</Link>
       </div>
 
       {/* Featured Card */}
@@ -247,9 +201,9 @@ export default function HomeClient({ ratings }) {
         </Link>
       )}
 
-      {/* Ratings grid */}
+      {/* 2 NFL + 2 NBA grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1px', background: '#2a2a2a', borderBottom: '1px solid #2a2a2a' }}>
-        {rest.map(function(rating) {
+        {homeGrid.map(function(rating) {
           return (
             <Link key={rating.slug} href={'/ratings/' + rating.slug} style={{ background: '#111111', padding: '32px', textDecoration: 'none', display: 'block' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
@@ -275,10 +229,26 @@ export default function HomeClient({ ratings }) {
         })}
       </div>
 
+      {/* View All Ratings CTA */}
+      <section style={{ padding: '64px 40px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px' }}>
+        <div>
+          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555550', marginBottom: '12px' }}>All Ratings</div>
+          <div style={{ fontSize: '32px', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, marginBottom: '12px' }}>
+            {ratings.length} Contracts <span style={{ color: '#1D9E75' }}>Rated.</span>
+          </div>
+          <div style={{ fontSize: '16px', color: '#9a9894', maxWidth: '400px' }}>
+            Every deal broken down with a finance lens. Search by team, filter by verdict, find the worst contracts in sports.
+          </div>
+        </div>
+        <Link href="/ratings" style={{ background: '#0F6E56', color: 'white', padding: '16px 32px', fontSize: '14px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-block' }}>
+          View All Ratings →
+        </Link>
+      </section>
+
       {/* Team Tool CTA */}
       <section style={{ padding: '64px 40px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px' }}>
         <div>
-          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555550', marginBottom: '12px' }}>New Feature</div>
+          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555550', marginBottom: '12px' }}>Team Analysis</div>
           <div style={{ fontSize: '32px', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, marginBottom: '12px' }}>
             Team Contract <span style={{ color: '#1D9E75' }}>Scores</span>
           </div>
@@ -297,8 +267,9 @@ export default function HomeClient({ ratings }) {
         </div>
         <div style={{ display: 'flex', gap: '24px' }}>
           <Link href="/" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Home</Link>
-          <Link href="/teams" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Teams</Link>
           <Link href="/ratings" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Ratings</Link>
+          <Link href="/throwbacks" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Throwbacks</Link>
+          <Link href="/teams" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Teams</Link>
           <a href="https://instagram.com/contractyearhq" target="_blank" style={{ fontSize: '12px', color: '#555550', textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none' }}>Instagram</a>
         </div>
         <div style={{ fontSize: '12px', color: '#555550' }}>@contractyearhq · Show your work.</div>
