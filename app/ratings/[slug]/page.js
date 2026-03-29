@@ -3,6 +3,7 @@ import { supabase } from '../../../lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import BullBearToggle from './BullBearToggle'
+import ShowYourWork from './ShowYourWork'
 
 export default async function RatingPage({ params }) {
   const { slug } = await params
@@ -60,15 +61,13 @@ export default async function RatingPage({ params }) {
         accentColor={accentColor}
       />
 
-      <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a', background: '#161616' }}>
-        <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: accentColor, marginBottom: '16px' }}>
-          Show Your Work.
-        </div>
-        <div style={{ fontSize: 'clamp(48px, 8vw, 96px)', fontWeight: 900, lineHeight: 1, color: '#F5F2EC', marginBottom: '16px', letterSpacing: '-0.02em' }}>
-          {rating.show_your_work_number}
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75, maxWidth: '620px' }}>{rating.show_your_work_desc}</p>
-      </section>
+      <ShowYourWork
+        stat={rating.show_your_work_number}
+        formula={rating.show_your_work_formula}
+        inputs={rating.show_your_work_inputs}
+        explanation={rating.show_your_work_desc}
+        accentColor={accentColor}
+      />
 
       {rating.full_analysis && (
         <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a', maxWidth: '720px' }}>
