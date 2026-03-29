@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import Link from 'next/link'
+export const revalidate = 0
 import HomeClient from './HomeClient'
 
 export default async function HomePage() {

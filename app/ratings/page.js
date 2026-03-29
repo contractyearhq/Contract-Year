@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase'
+export const revalidate = 0
 import RatingsClient from './RatingsClient'
 
 export default async function RatingsPage() {
