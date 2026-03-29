@@ -2,6 +2,7 @@ export const revalidate = 0
 import { supabase } from '../../../lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import BullBearToggle from './BullBearToggle'
 
 export default async function RatingPage({ params }) {
   const { slug } = await params
@@ -53,19 +54,11 @@ export default async function RatingPage({ params }) {
         <p style={{ fontSize: '18px', color: '#9a9894', lineHeight: 1.75 }}>{rating.summary}</p>
       </section>
 
-      <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a', maxWidth: '720px' }}>
-        <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: accentColor, marginBottom: '16px' }}>
-          The Bull Case
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75 }}>{rating.bull_case}</p>
-      </section>
-
-      <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a', maxWidth: '720px' }}>
-        <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#E24B4A', marginBottom: '16px' }}>
-          The Bear Case
-        </div>
-        <p style={{ fontSize: '17px', color: '#9a9894', lineHeight: 1.75 }}>{rating.bear_case}</p>
-      </section>
+      <BullBearToggle
+        bullCase={rating.bull_case}
+        bearCase={rating.bear_case}
+        accentColor={accentColor}
+      />
 
       <section style={{ padding: '48px 40px', borderBottom: '1px solid #2a2a2a', background: '#161616' }}>
         <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: accentColor, marginBottom: '16px' }}>
